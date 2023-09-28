@@ -1,6 +1,7 @@
-#ifndef ONE_WAY_L1
-
 #include "Cache.h"
+
+#ifdef ONE_WAY_L1
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,4 +35,4 @@ void read(int, unsigned char*);
 
 void write(int, unsigned char*);
 
-#endif /* ifndef ONE_WAY_L1 */
+#endif /* ifdef ONE_WAY_L1 */

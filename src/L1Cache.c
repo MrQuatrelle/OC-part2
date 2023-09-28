@@ -1,6 +1,6 @@
-#ifndef ONE_WAY_L1
-
 #include "SimpleCache.h"
+
+#ifdef ONE_WAY_L1
 
 unsigned char l1_cache[L1_SIZE];
 unsigned char L2Cache[L2_SIZE];
@@ -99,4 +99,4 @@ void write(int address, unsigned char* data) {
     access_l1(address, data, MODE_WRITE);
 }
 
-#endif /* ifndef ONE_WAY_L1 */
+#endif /* ifdef ONE_WAY_L1 */
