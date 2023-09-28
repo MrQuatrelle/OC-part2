@@ -1,6 +1,6 @@
-#ifndef ONE_WAY_L1
-
 #include "SimpleCache.h"
+
+#ifndef ONE_WAY_L1
 
 unsigned char l1_cache[L1_SIZE];
 unsigned char L2Cache[L2_SIZE];
