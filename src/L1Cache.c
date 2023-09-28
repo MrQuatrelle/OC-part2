@@ -3,15 +3,19 @@
 #ifdef ONE_WAY_L1
 
 unsigned char l1_cache[L1_SIZE];
-unsigned char L2Cache[L2_SIZE];
-unsigned char DRAM[DRAM_SIZE];
+unsigned char l2_cache[L2_SIZE];
+unsigned char dram[DRAM_SIZE];
 unsigned int time;
 cache_t simple_cache;
 
 /**************** Time Manipulation ***************/
-void reset_time() { time = 0; }
+void reset_time() {
+    time = 0;
+}
 
-unsigned int get_time() { return time; }
+unsigned int get_time() {
+    return time;
+}
 
 /****************  RAM memory (byte addressable) ***************/
 void access_dram(int address, unsigned char* data, int mode) {
@@ -21,19 +25,21 @@ void access_dram(int address, unsigned char* data, int mode) {
     }
 
     if (mode == MODE_READ) {
-        memcpy(data, &(DRAM[address]), BLOCK_SIZE);
+        memcpy(data, &(dram[address]), BLOCK_SIZE);
         time += DRAM_READ_TIME;
     }
 
     if (mode == MODE_WRITE) {
-        memcpy(&(DRAM[address]), data, BLOCK_SIZE);
+        memcpy(&(dram[address]), data, BLOCK_SIZE);
         time += DRAM_WRITE_TIME;
     }
 }
 
 /*********************** L1 cache *************************/
 
-void init_cache() { simple_cache.init = 0; }
+void init_cache() {
+    simple_cache.init = 0;
+}
 
 void access_l1(int address, unsigned char* data, int mode) {
 
