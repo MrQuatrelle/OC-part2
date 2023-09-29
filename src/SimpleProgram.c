@@ -1,4 +1,11 @@
+#include "Config.h"
+
+#ifdef TASK1
+#include "L1Cache.h"
+#else
 #include "SimpleCache.h"
+#endif
+
 
 int main() {
 

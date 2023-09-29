@@ -11,12 +11,12 @@ void reset_time();
 unsigned int get_time();
 
 /****************  RAM memory (byte addressable) ***************/
-void access_dram(int, unsigned char*, int);
+void access_dram(int, unsigned char*, access_mode);
 
 /*********************** Cache *************************/
 
 void init_cache();
-void access_l1(int, unsigned char*, int);
+void access_l1(int, unsigned char*, access_mode);
 
 typedef struct cache_line {
     unsigned char valid;

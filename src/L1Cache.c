@@ -1,4 +1,4 @@
-#include "SimpleCache.h"
+#include "L1Cache.h"
 
 #ifdef ONE_WAY_L1
 
@@ -18,7 +18,7 @@ unsigned int get_time() {
 }
 
 /****************  RAM memory (byte addressable) ***************/
-void access_dram(int address, unsigned char* data, int mode) {
+void access_dram(int address, unsigned char* data, access_mode mode) {
 
     if (address >= DRAM_SIZE - WORD_SIZE + 1) {
         exit(-1);
@@ -41,8 +41,7 @@ void init_cache() {
     simple_cache.init = 0;
 }
 
-void access_l1(int address, unsigned char* data, int mode) {
-
+void access_l1(int address, unsigned char* data, access_mode mode) {
     unsigned int index, tag, mem_address;
     unsigned char temp_block[BLOCK_SIZE];
 

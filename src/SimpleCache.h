@@ -1,4 +1,8 @@
+#include "Config.h"
+
 #include "Cache.h"
+
+#ifndef TASK1
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +28,7 @@ typedef struct cache_line {
 
 typedef struct cache {
     int init;
-    cache_line_t line;
+    cache_line_t lines[L1_NLINES];
 } cache_t;
 
 /*********************** Interfaces *************************/
@@ -32,3 +36,5 @@ typedef struct cache {
 void read(int, unsigned char*);
 
 void write(int, unsigned char*);
+
+#endif /* ifndef ONE_WAY_L1 */
