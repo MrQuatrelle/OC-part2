@@ -46,20 +46,27 @@ void access_l1(int address, unsigned char* data, access_mode mode) {
     unsigned char temp_block[BLOCK_SIZE];
 
     /* init cache */
+    // NOTE: still don't understand what this is doing
     if (simple_cache.init == 0) {
-        simple_cache.line.valid = 0;
+        for (int i = 0; i < L1_NLINES; i++) {
+            simple_cache.lines[i].valid = 0;
+        }
         simple_cache.init = 1;
     }
 
-    cache_line_t* line = &simple_cache.line;
-
+    // NOTE: This gives the index of the block in the cache
+    // the 3 least significant bits are the offset
     tag = address >> 3; // Why do I do this?
+    int l1_block_index = tag % L1_NLINES;
+    cache_line_t* line = &(simple_cache.lines[l1_block_index]);
 
+    // NOTE: the idea I get from this is:
+    // since each block is 8 bytes, the tag is the block index
+    // and mem_address is the offset in the block (2^3 = 8)
     mem_address = address >> 3; // again this....!
     mem_address = address << 3; // address of the block in memory
 
     /* access Cache*/
-
     if (!line->valid || line->tag != tag) { // if block not present - miss
         access_dram(mem_address, temp_block,
                     MODE_READ); // get new block from DRAM

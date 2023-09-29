@@ -26,7 +26,7 @@ typedef struct cache_line {
 
 typedef struct cache {
     int init;
-    cache_line_t line;
+    cache_line_t lines[L1_NLINES];
 } cache_t;
 
 /*********************** Interfaces *************************/
