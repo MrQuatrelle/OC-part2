@@ -1,9 +1,9 @@
-#include "Config.h"
-
 #include "Cache.h"
+#include "Config.h"
 
 #ifndef TASK1
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,20 +21,20 @@ void init_cache();
 void access_l1(int, unsigned char*, int);
 
 typedef struct cache_line {
-    unsigned char valid;
-    unsigned char dirty;
-    unsigned int tag;
+    uint8_t valid;
+    uint8_t dirty;
+    uint32_t tag;
 } cache_line_t;
 
 typedef struct cache {
-    int init;
+    uint32_t init;
     cache_line_t lines[L1_NLINES];
 } cache_t;
 
 /*********************** Interfaces *************************/
 
-void read(int, unsigned char*);
+void read(uint32_t, uint8_t*);
 
-void write(int, unsigned char*);
+void write(uint32_t, uint8_t*);
 
 #endif /* ifndef ONE_WAY_L1 */
