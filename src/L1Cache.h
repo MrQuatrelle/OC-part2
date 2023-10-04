@@ -1,7 +1,9 @@
 #include "Cache.h"
+#include <stdint.h>
 
 #ifdef ONE_WAY_L1
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,17 +13,17 @@ void reset_time();
 unsigned int get_time();
 
 /****************  RAM memory (byte addressable) ***************/
-void access_dram(int, unsigned char*, access_mode);
+void access_dram(uint32_t, uint8_t*, access_mode);
 
 /*********************** Cache *************************/
 
 void init_cache();
-void access_l1(int, unsigned char*, access_mode);
+void access_l1(uint32_t, uint8_t*, access_mode);
 
 typedef struct cache_line {
-    unsigned char valid;
-    unsigned char dirty;
-    unsigned int tag;
+    bool valid;
+    bool dirty;
+    uint32_t tag;
 } cache_line_t;
 
 typedef struct cache {
@@ -31,8 +33,13 @@ typedef struct cache {
 
 /*********************** Interfaces *************************/
 
-void read(int, unsigned char*);
+void read(uint32_t, uint8_t*);
 
-void write(int, unsigned char*);
+void write(uint32_t, uint8_t*);
+
+/*********************** Macros *************************/
+#define l1_index_to_addr(index) (index * BLOCK_SIZE)
+#define l1_index_plus_word_to_addr(index, word)                                \
+    ((index * BLOCK_SIZE) + (word * WORD_SIZE))
 
 #endif /* ifdef ONE_WAY_L1 */
