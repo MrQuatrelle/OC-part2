@@ -29,7 +29,12 @@ typedef struct cache_line {
 typedef struct cache {
     int init;
     cache_line_t lines[L1_NLINES];
-} cache_t;
+} l1_cache_t;
+
+typedef struct l2_cache {
+    int init;
+    cache_line_t lines[L1_NLINES];
+} l2_cache_t;
 
 /*********************** Interfaces *************************/
 

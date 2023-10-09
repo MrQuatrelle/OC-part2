@@ -1,6 +1,6 @@
 #include "Cache.h"
 
-#ifndef TASK1
+#if !defined(TASK1) && !defined(TASK2) && !defined(TASK3)
 
 #include <stdint.h>
 #include <stdio.h>
@@ -36,4 +36,4 @@ void read(uint32_t, uint8_t*);
 
 void write(uint32_t, uint8_t*);
 
-#endif /* ifndef ONE_WAY_L1 */
+#endif

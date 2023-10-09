@@ -1,6 +1,6 @@
 #include "SimpleCache.h"
 
-#if !defined(TASK1) && !defined(TASK2)
+#if !defined(TASK1) && !defined(TASK2) && !defined(TASK3)
 
 unsigned char l1_cache[L1_SIZE];
 unsigned char L2Cache[L2_SIZE];
@@ -9,9 +9,13 @@ unsigned int time;
 cache_t simple_cache;
 
 /**************** Time Manipulation ***************/
-void reset_time() { time = 0; }
+void reset_time() {
+    time = 0;
+}
 
-unsigned int get_time() { return time; }
+unsigned int get_time() {
+    return time;
+}
 
 /****************  RAM memory (byte addressable) ***************/
 void access_dram(int address, unsigned char* data, int mode) {
@@ -33,7 +37,9 @@ void access_dram(int address, unsigned char* data, int mode) {
 
 /*********************** L1 cache *************************/
 
-void init_cache() { simple_cache.init = 0; }
+void init_cache() {
+    simple_cache.init = 0;
+}
 
 void access_l1(int address, unsigned char* data, int mode) {
 
