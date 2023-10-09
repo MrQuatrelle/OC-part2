@@ -45,7 +45,7 @@ extern log_level_t g_level;
         if (g_level == LOG_NORMAL || g_level == LOG_VERBOSE) {                 \
             char buf[2048];                                                    \
             snprintf(buf, 2048, __VA_ARGS__);                                  \
-            fprintf(stderr, "[LOG]:   %s:%d :: %s :: %s\n", __FILE__,          \
+            fprintf(stderr, "\e[0;36m[LOG]\e[0m:   %s:%d :: %s :: %s\n", __FILE__,          \
                     __LINE__, __func__, buf);                                  \
         }                                                                      \
     } while (0);

@@ -47,7 +47,6 @@ void access_l1(uint32_t address, uint8_t* data, access_mode mode) {
     uint8_t temp_block[BLOCK_SIZE];
 
     /* init cache */
-    // NOTE: still don't get it
     if (simple_cache.init == 0) {
         for (int i = 0; i < L1_NLINES; i++) {
             simple_cache.lines[i].valid = false;
@@ -67,7 +66,7 @@ void access_l1(uint32_t address, uint8_t* data, access_mode mode) {
 
     /* cache miss */
     if (!line->valid || line->tag != l1_tag) {
-        LOG("Cache Miss (+%d)", DRAM_READ_TIME);
+        LOG("Cache Miss. (+%d)", DRAM_READ_TIME);
         access_dram(mem_address, temp_block, MODE_READ);
 
         /* write back */
