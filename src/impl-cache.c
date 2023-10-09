@@ -5,6 +5,11 @@
 #ifdef ONE_WAY_L1
 
 uint8_t l1_cache[L1_SIZE];
+
+#if defined(TASK2) || defined(TASK3)
+uint8_t l2_cache[L2_SIZE];
+#endif
+
 uint8_t dram[DRAM_SIZE];
 uint32_t time;
 l1_cache_t simple_cache;
@@ -70,7 +75,7 @@ void access_l2(uint32_t address, uint8_t* data, access_mode mode) {
 
     /* cache miss */
     if (!line->valid || line->tag != l2_tag) {
-        LOG("Cache Miss (+%d)", DRAM_READ_TIME);
+        LOG("Cache Read DRAM (+%d)", DRAM_READ_TIME);
         access_dram(mem_address, temp_block, MODE_READ);
 
         /* write back */
@@ -133,7 +138,6 @@ void access_l1(uint32_t address, uint8_t* data, access_mode mode) {
 
     /* cache miss */
     if (!line->valid || line->tag != l1_tag) {
-        LOG("Cache Miss (+%d)", DRAM_READ_TIME);
 #ifdef TASK1
         access_dram(mem_address, temp_block, MODE_READ);
 #else
