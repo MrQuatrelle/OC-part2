@@ -1,6 +1,6 @@
 #include "SimpleCache.h"
 
-#ifndef TASK1
+#if !defined(TASK1) && !defined(TASK2)
 
 unsigned char l1_cache[L1_SIZE];
 unsigned char L2Cache[L2_SIZE];
@@ -46,7 +46,7 @@ void access_l1(int address, unsigned char* data, int mode) {
         simple_cache.init = 1;
     }
 
-    cache_line_t* line = &simple_cache.line;
+    cache_line_t* line = &simple_cache.lines;
 
     tag = address >> 3; // Why do I do this?
 
@@ -91,11 +91,11 @@ void access_l1(int address, unsigned char* data, int mode) {
     }
 }
 
-void read(int address, unsigned char* data) {
+void read(uint32_t address, unsigned char* data) {
     access_l1(address, data, MODE_READ);
 }
 
-void write(int address, unsigned char* data) {
+void write(uint32_t address, unsigned char* data) {
     access_l1(address, data, MODE_WRITE);
 }
 

@@ -73,14 +73,9 @@ void access_l1(uint32_t address, uint8_t* data, access_mode mode) {
         /* write back */
         if ((line->valid) && (line->dirty)) {
             LOG("Write Back. (+%d)", DRAM_WRITE_TIME);
-            #ifdef TASK1
             access_dram(mem_address,
                         &(l1_cache[l1_index_to_addr(l1_line_index)]),
                         MODE_WRITE);
-            #else
-            // access_l2()
-            #endif  
-
         }
 
         memcpy(&(l1_cache[0]), temp_block, BLOCK_SIZE);
