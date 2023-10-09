@@ -1,7 +1,7 @@
 #include <stdint.h>
 
 #ifdef TASK1
-#include "L1Cache.h"
+#include "cache.h"
 #else
 #include "SimpleCache.h"
 #endif
