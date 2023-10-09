@@ -3,7 +3,6 @@
 #if !defined(TASK1) && !defined(TASK2) && !defined(TASK3)
 
 unsigned char l1_cache[L1_SIZE];
-unsigned char L2Cache[L2_SIZE];
 unsigned char DRAM[DRAM_SIZE];
 unsigned int time;
 cache_t simple_cache;
@@ -52,7 +51,7 @@ void access_l1(int address, unsigned char* data, int mode) {
         simple_cache.init = 1;
     }
 
-    cache_line_t* line = &simple_cache.lines;
+    cache_line_t* line = &simple_cache.line;
 
     tag = address >> 3; // Why do I do this?
 

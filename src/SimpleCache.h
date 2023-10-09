@@ -25,10 +25,17 @@ typedef struct cache_line {
     uint32_t tag;
 } cache_line_t;
 
+#if !defined(TASK1) && !defined(TASK2) && !defined(TASK3)
+typedef struct cache {
+    uint32_t init;
+    cache_line_t line;
+} cache_t;
+#else
 typedef struct cache {
     uint32_t init;
     cache_line_t lines[L1_NLINES];
 } cache_t;
+#endif
 
 /*********************** Interfaces *************************/
 
