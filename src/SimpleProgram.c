@@ -1,5 +1,3 @@
-#include <stdint.h>
-
 #if defined(TASK1) || defined(TASK2) || defined(TASK3)
 #include "impl-cache.h"
 #else
