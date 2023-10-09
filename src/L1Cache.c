@@ -5,7 +5,6 @@
 #ifdef ONE_WAY_L1
 
 uint8_t l1_cache[L1_SIZE];
-uint8_t l2_cache[L2_SIZE];
 uint8_t dram[DRAM_SIZE];
 uint32_t time;
 cache_t simple_cache;
@@ -44,7 +43,7 @@ void init_cache() {
 }
 
 void access_l1(uint32_t address, uint8_t* data, access_mode mode) {
-    uint32_t mem_address;
+    uint32_t l1_tag, l1_line_index, mem_address;
     uint8_t temp_block[BLOCK_SIZE];
 
     /* init cache */
@@ -56,46 +55,51 @@ void access_l1(uint32_t address, uint8_t* data, access_mode mode) {
         simple_cache.init = 1;
     }
 
-    uint32_t tag = address >> L1_TAG_OFFSET;
+    l1_tag = address >> L1_TAG_OFFSET;
 
     /* index of l1 cache line */
-    uint32_t l1_line_index =
-        (address >> BLOCK_OFFSET_BITS) & ((1 << L1_INDEX_BITS) - 1);
+    l1_line_index = (address >> (BYTE_OFFSET + BLOCK_OFFSET)) & ((1 << L1_INDEX_BITS) - 1);
 
-    printf("address: %x, tag: %x, line index: %x\n", address, tag,
-           l1_line_index);
+    /* address of beggining of data block */
+    mem_address = l1_tag << ((BYTE_OFFSET + BLOCK_OFFSET) + L1_INDEX_BITS);
 
     cache_line_t* line = &(simple_cache.lines[l1_line_index]);
 
-    /* address of beggining of data block */
-    mem_address = tag << (BLOCK_OFFSET_BITS + L1_INDEX_BITS);
-
     /* cache miss */
-    if (!line->valid || line->tag != tag) {
+    if (!line->valid || line->tag != l1_tag) {
+        LOG("Cache Miss (+%d)", DRAM_READ_TIME);
         access_dram(mem_address, temp_block, MODE_READ);
 
         /* write back */
         if ((line->valid) && (line->dirty)) {
+            LOG("Write Back. (+%d)", DRAM_WRITE_TIME);
+            #ifdef TASK1
             access_dram(mem_address,
                         &(l1_cache[l1_index_to_addr(l1_line_index)]),
                         MODE_WRITE);
+            #else
+            // access_l2()
+            #endif  
+
         }
 
         memcpy(&(l1_cache[0]), temp_block, BLOCK_SIZE);
         line->valid = true;
-        line->tag = tag;
+        line->tag = l1_tag;
         line->dirty = 0;
     }
 
     if (mode == MODE_READ) {
+        LOG("Cache Hit Read. (+%d)", L1_READ_TIME)
         memcpy(data,
                &(l1_cache[l1_index_plus_word_to_addr(
                    l1_line_index, address % WORDS_PER_BLOCK)]),
                WORD_SIZE);
+        time += L1_READ_TIME;
     }
-    time += L1_READ_TIME;
 
     if (mode == MODE_WRITE) {
+        LOG("Cache Hit Write. (+%d)", L1_WRITE_TIME)
         memcpy(&(l1_cache[l1_index_plus_word_to_addr(
                    l1_line_index, address % WORDS_PER_BLOCK)]),
                data, WORD_SIZE);

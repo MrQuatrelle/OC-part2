@@ -54,3 +54,5 @@ dkms.conf
 
 SimpleCache
 src/compile_commands.json
+.DS_Store
+.gitignore
