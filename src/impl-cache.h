@@ -44,7 +44,17 @@ void write(uint32_t, uint8_t*);
 
 /*********************** Macros *************************/
 #define l1_index_to_addr(index) (index * BLOCK_SIZE)
+
 #define l1_index_plus_word_to_addr(index, word)                                \
     ((index * BLOCK_SIZE) + (word * WORD_SIZE))
 
 #endif /* ifdef ONE_WAY_L1 */
+
+#ifdef ONE_WAY_L2
+
+#define l2_index_to_addr(index) (index * BLOCK_SIZE)
+
+#define l2_index_plus_word_to_addr(index, word)                                \
+    ((index * BLOCK_SIZE) + (word * WORD_SIZE))
+
+#endif

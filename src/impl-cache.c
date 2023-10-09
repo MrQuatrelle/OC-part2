@@ -5,6 +5,7 @@
 #ifdef ONE_WAY_L1
 
 uint8_t l1_cache[L1_SIZE];
+uint8_t l2_cache[L2_SIZE];
 uint8_t dram[DRAM_SIZE];
 uint32_t time;
 l1_cache_t simple_cache;
