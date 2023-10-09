@@ -111,7 +111,6 @@ void access_l1(uint32_t address, uint8_t* data, access_mode mode) {
     uint8_t temp_block[BLOCK_SIZE];
 
     /* init cache */
-    // NOTE: still don't get it
     if (simple_cache.init == 0) {
         for (int i = 0; i < L1_NLINES; i++) {
             simple_cache.lines[i].valid = false;
