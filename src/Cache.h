@@ -1,4 +1,3 @@
-#include "Config.h"
 #include "utils/logging.h"
 
 #ifdef TASK1

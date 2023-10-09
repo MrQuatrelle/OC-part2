@@ -1,4 +1,3 @@
-#include "Config.h"
 #include <stdint.h>
 
 #ifdef TASK1
