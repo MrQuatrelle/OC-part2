@@ -42,6 +42,8 @@ void init_cache() {
 
 #if defined(TASK2) || defined(TASK3)
 
+uint8_t l2_cache[L2_SIZE];
+
 void access_l2(uint32_t address, uint8_t* data, access_mode mode) {
     uint32_t l2_tag, l2_line_index, mem_address;
     uint8_t temp_block[BLOCK_SIZE];
