@@ -31,13 +31,14 @@
 #define L2_SIZE (L2_NLINES * BLOCK_SIZE)         // in bytes
 
 // HACK: we should calculate this from the above macros but log2
-#define BYTE_OFFSET (round(log2(WORD_SIZE)))
-#define BLOCK_OFFSET (4)
+#define BYTE_OFFSET (lround(log2(WORD_SIZE)))
+#define BLOCK_OFFSET (lround(log2(WORDS_PER_BLOCK)))
 
-#define L1_INDEX_BITS (8) // 2^8 = 256 and thats the number of lines in the L1 cache.
-#define L1_TAG_BITS (18)
+#define L1_INDEX_BITS                                                          \
+    (lround(log2(L1_NLINES))) // 2^8 = 256 and thats the number of lines in the
+                              // L1 cache.
+#define L1_TAG_BITS (32 - L1_INDEX_BITS - BLOCK_OFFSET - BYTE_OFFSET)
 #define L1_TAG_OFFSET (BYTE_OFFSET + BLOCK_OFFSET + L1_INDEX_BITS)
-
 
 typedef enum {
     MODE_READ,
@@ -61,8 +62,8 @@ typedef enum {
 #define L1_SIZE (256 * BLOCK_SIZE)    // in bytes
 #define L2_SIZE (512 * BLOCK_SIZE)    // in bytes
 
-
-#define L2_INDEX_BITS (9) // 2^9 = 512 and thats the number of lines in the L2 cache. 
+#define L2_INDEX_BITS                                                          \
+    (9) // 2^9 = 512 and thats the number of lines in the L2 cache.
 #define L2_TAG_BITS (17)
 #define L2_TAG_OFFSET (BYTE_OFFSET + BLOCK_OFFSET + L2_INDEX_BITS)
 
