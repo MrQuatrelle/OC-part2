@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#ifdef TASK1
+#if defined(TASK1) || defined(TASK2)
 #include "impl-cache.h"
 #else
 #include "SimpleCache.h"
