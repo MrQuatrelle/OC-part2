@@ -56,3 +56,6 @@ SimpleCache
 src/compile_commands.json
 .DS_Store
 .gitignore
+
+.cache
+program
