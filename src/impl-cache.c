@@ -71,7 +71,7 @@ void access_l2(uint32_t address, uint8_t* data, access_mode mode) {
 
     /* cache miss */
     if (!line->valid || line->tag != l2_tag) {
-        LOG("Cache Miss (+%d)", DRAM_READ_TIME);
+        LOG("Cache Read DRAM (+%d)", DRAM_READ_TIME);
         access_dram(mem_address, temp_block, MODE_READ);
 
         /* write back */
@@ -134,7 +134,6 @@ void access_l1(uint32_t address, uint8_t* data, access_mode mode) {
 
     /* cache miss */
     if (!line->valid || line->tag != l1_tag) {
-        LOG("Cache Miss (+%d)", DRAM_READ_TIME);
 #ifdef TASK1
         access_dram(mem_address, temp_block, MODE_READ);
 #else
