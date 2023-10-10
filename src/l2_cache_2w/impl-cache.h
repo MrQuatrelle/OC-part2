@@ -36,6 +36,7 @@ typedef struct cache_line {
     bool valid;
     bool dirty;
     uint32_t tag;
+    uint32_t lru_counter;
 } cache_line_t;
 
 typedef struct cache {

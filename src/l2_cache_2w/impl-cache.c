@@ -1,4 +1,5 @@
 #include "impl-cache.h"
+#include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -49,6 +50,7 @@ void access_l2(const uint32_t address, uint8_t* data, access_mode mode) {
     if (l2_simple_cache.init == 0) {
         for (int i = 0; i < L2_NLINES; i++) {
             l2_simple_cache.lines[i].valid = false;
+            l2_simple_cache.lines[i].lru_counter = ~(0);
         }
         l2_simple_cache.init = 1;
     }
@@ -63,13 +65,33 @@ void access_l2(const uint32_t address, uint8_t* data, access_mode mode) {
     mem_address =
         tag << (L2_TAG_OFFSET) | (set_index << (BYTE_OFFSET + BLOCK_OFFSET));
 
-    cache_line_t* line;
+    /* selecting line in set */
+    cache_line_t* line = NULL;
     uint32_t line_index;
+    uint32_t lru_index = ~(0);
+    uint32_t lru_max_seen = 0;
+
     for (int i = 0; i < L2_NWAYS; i++) {
         line_index = l2_set_to_line_index(set_index) + i;
-        line = &(l2_simple_cache.lines[line_index]);
-        if (!line->valid)
+        cache_line_t* tmp = &(l2_simple_cache.lines[line_index]);
+
+        if (tmp->lru_counter > lru_max_seen) {
+            lru_max_seen = tmp->lru_counter;
+            lru_index = line_index;
+        }
+
+        if (!tmp->valid) {
+            line = tmp;
             break;
+        }
+    }
+
+    /* if all lines are valid, select LRU */
+    if (line == NULL) {
+        if (lru_index != (uint32_t) ~(0)) {
+            PANIC("Failed to find LRU line");
+        }
+        line = &(l2_simple_cache.lines[lru_index]);
     }
 
     /* cache miss */
@@ -112,6 +134,8 @@ void access_l2(const uint32_t address, uint8_t* data, access_mode mode) {
         time += L2_WRITE_TIME;
         line->dirty = 1;
     }
+
+    line->lru_counter = 0;
 }
 
 void access_l1(const uint32_t address, uint8_t* data, access_mode mode) {
