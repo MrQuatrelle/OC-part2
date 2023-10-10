@@ -74,7 +74,9 @@ void access_l1(uint32_t address, uint8_t* data, access_mode mode) {
                         MODE_WRITE);
         }
 
-        memcpy(&(l1_cache[0]), temp_block, BLOCK_SIZE);
+        memcpy(&(l1_cache[l1_index_plus_word_to_addr(
+                   l1_line_index, address % WORDS_PER_BLOCK)]),
+               temp_block, BLOCK_SIZE);
         line->valid = true;
         line->tag = l1_tag;
         line->dirty = 0;
