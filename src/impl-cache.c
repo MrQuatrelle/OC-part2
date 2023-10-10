@@ -4,15 +4,15 @@
 
 #ifdef ONE_WAY_L1
 
+uint8_t dram[DRAM_SIZE];
+uint32_t time;
 uint8_t l1_cache[L1_SIZE];
+l1_cache_t l1_simple_cache;
 
 #if defined(TASK2) || defined(TASK3)
 uint8_t l2_cache[L2_SIZE];
+l2_cache_t l2_simple_cache;
 #endif
-
-uint8_t dram[DRAM_SIZE];
-uint32_t time;
-l1_cache_t simple_cache;
 
 /**************** Time Manipulation ***************/
 void reset_time() {
@@ -42,7 +42,10 @@ void access_dram(uint32_t address, uint8_t* data, access_mode mode) {
 }
 
 void init_cache() {
-    simple_cache.init = 0;
+    l1_simple_cache.init = 0;
+#if defined(TASK2) || defined(TASK3)
+    l2_simple_cache.init = 0;
+#endif
 }
 
 #if defined(TASK2) || defined(TASK3)
@@ -54,7 +57,6 @@ void access_l2(uint32_t address, uint8_t* data, access_mode mode) {
     uint8_t temp_block[BLOCK_SIZE];
 
     /* init cache */
-    // NOTE: still don't get it
     if (simple_cache.init == 0) {
         for (int i = 0; i < L2_NLINES; i++) {
             simple_cache.lines[i].valid = false;
@@ -113,54 +115,51 @@ void access_l2(uint32_t address, uint8_t* data, access_mode mode) {
 
 #endif /* if defined(TASK2) || defined(TASK3) */
 
-void access_l1(uint32_t address, uint8_t* data, access_mode mode) {
-    uint32_t l1_tag, l1_line_index, mem_address;
+void access_l1(const uint32_t address, uint8_t* data, access_mode mode) {
+    uint32_t tag, l1_line_index, mem_address;
     uint8_t temp_block[BLOCK_SIZE];
 
     /* init cache */
-    if (simple_cache.init == 0) {
+    if (l1_simple_cache.init == 0) {
+#ifdef ONE_WAY_L1
         for (int i = 0; i < L1_NLINES; i++) {
-            simple_cache.lines[i].valid = false;
+            l1_simple_cache.lines[i].valid = false;
         }
-        simple_cache.init = 1;
+#endif
+        l1_simple_cache.init = 1;
     }
 
-    l1_tag = address >> L1_TAG_OFFSET;
+    tag = address >> L1_TAG_OFFSET;
 
     /* index of l1 cache line */
+    // TODO: have to change the macros to support baseline project
+    // (stopped adating here)
     l1_line_index =
         (address >> (BYTE_OFFSET + BLOCK_OFFSET)) & ((1 << L1_INDEX_BITS) - 1);
 
     /* address of beggining of data block */
-    mem_address = l1_tag << ((BYTE_OFFSET + BLOCK_OFFSET) + L1_INDEX_BITS);
+    mem_address = tag << (L1_TAG_OFFSET) |
+                  (l1_line_index << (BYTE_OFFSET + BLOCK_OFFSET));
 
-    cache_line_t* line = &(simple_cache.lines[l1_line_index]);
+    cache_line_t* line = &(l1_simple_cache.lines[l1_line_index]);
 
     /* cache miss */
-    if (!line->valid || line->tag != l1_tag) {
-
-#ifdef TASK1
+    if (!(line->valid) || line->tag != tag) {
         access_dram(mem_address, temp_block, MODE_READ);
-#else
-        access_l2(mem_address, temp_block, MODE_READ);
-#endif
 
         /* write back */
         if ((line->valid) && (line->dirty)) {
             LOG("Write Back. (+%d)", DRAM_WRITE_TIME);
-#ifdef TASK1
             access_dram(mem_address,
                         &(l1_cache[l1_index_to_addr(l1_line_index)]),
                         MODE_WRITE);
-#else
-            access_l2(mem_address, &(l1_cache[l1_index_to_addr(l1_line_index)]),
-                      MODE_WRITE);
-#endif
         }
 
-        memcpy(&(l1_cache[0]), temp_block, BLOCK_SIZE);
+        memcpy(&(l1_cache[l1_index_to_addr(l1_line_index)]), temp_block,
+               BLOCK_SIZE);
+
         line->valid = true;
-        line->tag = l1_tag;
+        line->tag = tag;
         line->dirty = 0;
     }
 
@@ -168,7 +167,7 @@ void access_l1(uint32_t address, uint8_t* data, access_mode mode) {
         LOG("Cache Hit Read. (+%d)", L1_READ_TIME)
         memcpy(data,
                &(l1_cache[l1_index_plus_word_to_addr(
-                   l1_line_index, address % WORDS_PER_BLOCK)]),
+                   l1_line_index, (address >> BYTE_OFFSET) % WORDS_PER_BLOCK)]),
                WORD_SIZE);
         time += L1_READ_TIME;
     }
@@ -176,7 +175,7 @@ void access_l1(uint32_t address, uint8_t* data, access_mode mode) {
     if (mode == MODE_WRITE) {
         LOG("Cache Hit Write. (+%d)", L1_WRITE_TIME)
         memcpy(&(l1_cache[l1_index_plus_word_to_addr(
-                   l1_line_index, address % WORDS_PER_BLOCK)]),
+                   l1_line_index, (address >> BYTE_OFFSET) % WORDS_PER_BLOCK)]),
                data, WORD_SIZE);
         time += L1_WRITE_TIME;
         line->dirty = 1;
