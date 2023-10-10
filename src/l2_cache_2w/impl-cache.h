@@ -15,11 +15,8 @@
 #define L1_TAG_BITS (32 - L1_INDEX_BITS - BLOCK_OFFSET - BYTE_OFFSET)
 #define L1_TAG_OFFSET (BYTE_OFFSET + BLOCK_OFFSET + L1_INDEX_BITS)
 
-__always_inline uint32_t __l2_index_bits() __attribute_pure__ {
-    return (lround(log2(L2_NLINES / 2.0)));
-}
-
-#define L2_INDEX_BITS (__l2_index_bits())
+#define L2_NWAYS (2)
+#define L2_INDEX_BITS (lround(log2(L2_NLINES / (float)(L2_NWAYS))))
 #define L2_TAG_BITS (32 - L2_INDEX_BITS - BLOCK_OFFSET - BYTE_OFFSET)
 #define L2_TAG_OFFSET (BYTE_OFFSET + BLOCK_OFFSET + L2_INDEX_BITS)
 
@@ -67,3 +64,5 @@ void write(uint32_t, uint8_t*);
 
 #define l2_index_plus_word_to_addr(index, word)                                \
     ((index * BLOCK_SIZE) + (word * WORD_SIZE))
+
+#define l2_set_index_to_line(set) (set * L2_NWAYS)

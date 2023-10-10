@@ -61,7 +61,12 @@ void access_l2(uint32_t address, uint8_t* data, access_mode mode) {
     /* address of beggining of data block */
     mem_address = l2_tag << ((BYTE_OFFSET + BLOCK_OFFSET) + L2_INDEX_BITS);
 
-    cache_line_t* line = &(l1_simple_cache.lines[l2_set_index]);
+    cache_line_t* line;
+    for (int i = 0; i < L2_NWAYS; i++) {
+        line = &(l1_simple_cache.lines[l2_set_index_to_line(l2_set_index)]);
+        if (!line->valid)
+            break;
+    }
 
     /* cache miss */
     if (!line->valid || line->tag != l2_tag) {
@@ -76,7 +81,9 @@ void access_l2(uint32_t address, uint8_t* data, access_mode mode) {
                         MODE_WRITE);
         }
 
-        memcpy(&(l2_cache[0]), temp_block, BLOCK_SIZE);
+        memcpy(&(l2_cache[l2_index_plus_word_to_addr(
+                   l2_set_index, address % WORDS_PER_BLOCK)]),
+               temp_block, BLOCK_SIZE);
         line->valid = true;
         line->tag = l2_tag;
         line->dirty = 0;
@@ -135,7 +142,9 @@ void access_l1(uint32_t address, uint8_t* data, access_mode mode) {
                       MODE_WRITE);
         }
 
-        memcpy(&(l1_cache[0]), temp_block, BLOCK_SIZE);
+        memcpy(&(l1_cache[l1_index_plus_word_to_addr(
+                   l1_line_index, address % WORDS_PER_BLOCK)]),
+               temp_block, BLOCK_SIZE);
         line->valid = true;
         line->tag = l1_tag;
         line->dirty = 0;
