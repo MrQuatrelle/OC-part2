@@ -67,7 +67,7 @@ void access_l2(const uint32_t address, uint8_t* data, access_mode mode) {
     uint32_t line_index;
     for (int i = 0; i < L2_NWAYS; i++) {
         line_index = l2_set_to_line_index(set_index) + i;
-        line = &(l1_simple_cache.lines[line_index]);
+        line = &(l2_simple_cache.lines[line_index]);
         if (!line->valid)
             break;
     }
