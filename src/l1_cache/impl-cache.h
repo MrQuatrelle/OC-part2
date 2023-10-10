@@ -1,12 +1,11 @@
 #include "../Cache.h"
 #include <stdint.h>
 
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
-
 
 #define BYTE_OFFSET (lround(log2(WORD_SIZE)))
 #define BLOCK_OFFSET (lround(log2(WORDS_PER_BLOCK)))
