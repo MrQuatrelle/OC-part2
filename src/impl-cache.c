@@ -138,6 +138,7 @@ void access_l1(uint32_t address, uint8_t* data, access_mode mode) {
 
     /* cache miss */
     if (!line->valid || line->tag != l1_tag) {
+
 #ifdef TASK1
         access_dram(mem_address, temp_block, MODE_READ);
 #else
