@@ -9,20 +9,20 @@ int main() {
 
   for(int n = 1; n <= DRAM_SIZE/4; n*=WORD_SIZE) {
 
-    reset_time();
-    init_cache();
+    resetTime();
+    initCache();
 
     printf("\nNumber of words: %d\n", (n-1)/WORD_SIZE + 1);
     
     for(int i = 0; i < n; i+=WORD_SIZE) {
       write(i, (unsigned char *)(&i));
-      clock1 = get_time();
+      clock1 = getTime();
       printf("Write; Address %d; Value %d; Time %d\n", i, i, clock1);
     }
 
     for(int i = 0; i < n; i+=WORD_SIZE) {
       read(i, (unsigned char *)(&value));
-      clock1 = get_time();
+      clock1 = getTime();
       printf("Read; Address %d; Value %d; Time %d\n", i, value, clock1);
     }  
 
@@ -37,12 +37,12 @@ int main() {
     int mode = rand() % 2;
     if (mode == MODE_READ) {
       read(address, (unsigned char *)(&value));
-      clock1 = get_time();
+      clock1 = getTime();
       printf("Read; Address %d; Value %d; Time %d\n", address, value, clock1);
     }
     else {
       write(address, (unsigned char *)(&address));
-      clock1 = get_time();
+      clock1 = getTime();
       printf("Write; Address %d; Value %d; Time %d\n", address, address, clock1);
     }
   }
