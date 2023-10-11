@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS=-Wall -Wextra
 
 INCLUDE_DIRS := l1_cache l2_cache l2_cache_2w .
-INCLUDES = $(addprefix -I, $(INCLUDE_DIRS))
+INCLUDES = $(addprefix -I , $(INCLUDE_DIRS))
 
 CFLAGS += $(INCLUDES)
 
