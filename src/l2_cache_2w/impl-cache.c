@@ -75,12 +75,14 @@ void access_l2(const uint32_t address, uint8_t* data, access_mode mode) {
         line_index = l2_set_to_line_index(set_index) + i;
         cache_line_t* tmp = &(l2_simple_cache.lines[line_index]);
 
+        /* find LRU */
         if (tmp->lru_counter > lru_max_seen) {
             lru_max_seen = tmp->lru_counter;
             lru_index = line_index;
         }
 
-        if (!tmp->valid) {
+        /* if line is free or the tag matches */
+        if (!tmp->valid || tmp->tag == tag) {
             line = tmp;
             break;
         }
@@ -88,7 +90,7 @@ void access_l2(const uint32_t address, uint8_t* data, access_mode mode) {
 
     /* if all lines are valid, select LRU */
     ALWAYS_ASSERT(lru_index != (uint32_t) ~(0), "Failed to find LRU line");
-    line = &(l2_simple_cache.lines[lru_index]);
+    line = (line) ? line : &(l2_simple_cache.lines[lru_index]);
 
     /* cache miss */
     if (!line->valid || line->tag != tag) {
