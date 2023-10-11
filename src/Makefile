@@ -24,10 +24,12 @@ TASK2_OBJECTS := $(TASK2_SOURCES:.c=.o)
 TASK3_OBJECTS := $(TASK3_SOURCES:.c=.o)
 UTILS_OBJECTS  := $(UTILS_SOURCES:.c=.o)
 
+# optional debug symbols: run make DEBUG=no to deactivate them
 ifneq ($(strip $(DEBUG)), no)
   CFLAGS += -g
 endif
 
+# optional O3 optimization symbols: run make OPTIM=no to deactivate them
 ifeq ($(strip $(OPTIM)), no)
   CFLAGS += -O3
 else
@@ -48,5 +50,6 @@ l2_cache_2w/TASK3: $(TASK3_OBJECTS) $(UTILS_OBJECTS) $(CLIENT_OBJECTS)
 
 clean:
 	rm -f $(OBJECTS) $(TARGET_EXECS)
+	rm -f SimpleProgram.o
 
 .PHONY: clean

@@ -1,17 +1,16 @@
 #include "../Cache.h"
-#include <stdint.h>
+#include "utils/logging.h"
 
+#include <stdint.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define BYTE_OFFSET (lround(log2(WORD_SIZE)))
-#define BLOCK_OFFSET (lround(log2(WORDS_PER_BLOCK)))
-#define L1_INDEX_BITS                                                          \
-    (lround(log2(L1_NLINES))) // 2^8 = 256 and thats the number of lines in the
-                              // L1 cache.
+#define BYTE_OFFSET ((int)ceil(log2(WORD_SIZE)))
+#define BLOCK_OFFSET ((int)ceil(log2(WORDS_PER_BLOCK)))
+#define L1_INDEX_BITS ((int)ceil(log2(L1_NLINES)))
 #define L1_TAG_BITS (32 - L1_INDEX_BITS - BLOCK_OFFSET - BYTE_OFFSET)
 #define L1_TAG_OFFSET (BYTE_OFFSET + BLOCK_OFFSET + L1_INDEX_BITS)
 

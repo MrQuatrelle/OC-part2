@@ -1,4 +1,5 @@
 #include "../Cache.h"
+#include "utils/logging.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -7,14 +8,14 @@
 #include <string.h>
 #include <math.h>
 
-#define BYTE_OFFSET (lround(log2(WORD_SIZE)))
-#define BLOCK_OFFSET (lround(log2(WORDS_PER_BLOCK)))
+#define BYTE_OFFSET ((int)ceil(log2(WORD_SIZE)))
+#define BLOCK_OFFSET ((int)ceil(log2(WORDS_PER_BLOCK)))
 
-#define L1_INDEX_BITS (lround(log2(L1_NLINES)))
+#define L1_INDEX_BITS ((int)ceil(log2(L1_NLINES)))
 #define L1_TAG_BITS (32 - L1_INDEX_BITS - BLOCK_OFFSET - BYTE_OFFSET)
 #define L1_TAG_OFFSET (BYTE_OFFSET + BLOCK_OFFSET + L1_INDEX_BITS)
 
-#define L2_INDEX_BITS (lround(log2(L2_NLINES)))
+#define L2_INDEX_BITS ((int)ceil(log2(L2_NLINES)))
 #define L2_TAG_BITS (32 - L2_INDEX_BITS - BLOCK_OFFSET - BYTE_OFFSET)
 #define L2_TAG_OFFSET (BYTE_OFFSET + BLOCK_OFFSET + L2_INDEX_BITS)
 
