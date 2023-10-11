@@ -135,6 +135,10 @@ void access_l2(const uint32_t address, uint8_t* data, access_mode mode) {
         line->dirty = 1;
     }
 
+    for (int i = 0; i < L2_NLINES; i++) {
+        l2_simple_cache.lines[i].lru_counter++;
+    }
+
     line->lru_counter = 0;
 }
 
