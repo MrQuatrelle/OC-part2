@@ -87,12 +87,8 @@ void access_l2(const uint32_t address, uint8_t* data, access_mode mode) {
     }
 
     /* if all lines are valid, select LRU */
-    if (line == NULL) {
-        if (lru_index != (uint32_t) ~(0)) {
-            PANIC("Failed to find LRU line");
-        }
-        line = &(l2_simple_cache.lines[lru_index]);
-    }
+    ALWAYS_ASSERT(lru_index != (uint32_t) ~(0), "Failed to find LRU line");
+    line = &(l2_simple_cache.lines[lru_index]);
 
     /* cache miss */
     if (!line->valid || line->tag != tag) {

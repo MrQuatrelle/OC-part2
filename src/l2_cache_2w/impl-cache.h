@@ -1,5 +1,6 @@
 #include "../Cache.h"
 #include "utils/logging.h"
+#include "utils/betterassert.h"
 
 #include <math.h>
 #include <stdbool.h>
