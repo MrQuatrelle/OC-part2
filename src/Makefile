@@ -24,6 +24,16 @@ TASK2_OBJECTS := $(TASK2_SOURCES:.c=.o)
 TASK3_OBJECTS := $(TASK3_SOURCES:.c=.o)
 UTILS_OBJECTS  := $(UTILS_SOURCES:.c=.o)
 
+ifneq ($(strip $(DEBUG)), no)
+  CFLAGS += -g
+endif
+
+ifeq ($(strip $(OPTIM)), no)
+  CFLAGS += -O3
+else
+  CFLAGS += -O0
+endif
+
 vpath # clears VPATH
 vpath %.h $(INCLUDE_DIRS)
 
