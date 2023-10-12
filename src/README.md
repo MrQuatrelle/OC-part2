@@ -61,5 +61,5 @@ This project is licensed under the  GNU GENERAL PUBLIC LICENSE - see the LICENSE
 Acknowledgments
 ---------------
 
-Utils where provided by DEI/IST/ULisboa (Operating Systems)
+Utils where provided by DEI/IST/ULisboa (at Operating Systems course)
 
