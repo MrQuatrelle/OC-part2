@@ -1,7 +1,5 @@
 #include "SimpleCache.h"
 
-#if !defined(TASK1) && !defined(TASK2) && !defined(TASK3)
-
 unsigned char l1_cache[L1_SIZE];
 unsigned char DRAM[DRAM_SIZE];
 unsigned int time;
@@ -42,7 +40,7 @@ void init_cache() {
 
 void access_l1(int address, unsigned char* data, int mode) {
 
-    unsigned int index, tag, mem_address;
+    unsigned int tag, mem_address;
     unsigned char temp_block[BLOCK_SIZE];
 
     /* init cache */
@@ -104,4 +102,3 @@ void write(uint32_t address, unsigned char* data) {
     access_l1(address, data, MODE_WRITE);
 }
 
-#endif /* ifndef ONE_WAY_L1 */
