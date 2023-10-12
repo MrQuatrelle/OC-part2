@@ -68,7 +68,7 @@ void access_l2(const uint32_t address, uint8_t* data, access_mode mode) {
     /* selecting line in set */
     cache_line_t* line = NULL;
     uint32_t line_index;
-    uint32_t lru_index = ~(0);
+    uint32_t lru_index = (0);
     uint32_t lru_max_seen = 0;
 
     for (int i = 0; i < L2_NWAYS; i++) {
